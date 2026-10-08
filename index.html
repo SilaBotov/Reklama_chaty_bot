@@ -108,6 +108,17 @@ footer{padding:26px 0;color:var(--mu);font-size:14px;text-align:center}
 .chat>*{position:relative;z-index:1}
 @keyframes rot{to{transform:translate(-50%,-50%) rotate(360deg)}}
 .cta h2{font-size:clamp(15px,5.2vw,42px)}.cta h2 .ln{display:block;white-space:nowrap}
+@media (min-width:821px){.hs{justify-self:end}}
+.hero p{margin:20px 0 14px}.sub{margin:0 0 22px}
+.hero{padding-bottom:48px}.intro{padding:56px 0 24px}.intro p{font-size:20px;max-width:34em;margin:0 0 14px;color:#F3F1FF}.intro .sub{margin:0 0 24px}
+h2{max-width:none}.steps p,.intro p{max-width:none}
+.intro p{margin:0}.intro .sub{font-size:20px;line-height:1.6;color:#F3F1FF;margin:0 0 26px}
+.price{gap:48px 96px}.pl{max-width:23em}.pl li{display:grid;grid-template-columns:12em auto;justify-content:start;gap:0}
+.price .note,.price .hl{font-size:18px}
+.shots figure{display:inline-flex;flex-direction:column}.shots .cap{order:-1;margin:0 0 16px;font-size:18px;line-height:1.4;font-weight:500;color:#FFFFFF}
+.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:80px;columns:auto;align-items:start}.shots figure{display:flex;flex-direction:column;margin:0;width:auto}
+@media (max-width:760px){.shots{grid-template-columns:minmax(0,1fr);gap:56px}}
+.mcol{display:flex;flex-direction:column;gap:80px;min-width:0}
 @media (max-width:820px){.hg,.price{grid-template-columns:1fr}.ft{grid-template-columns:1fr}section{padding:52px 0}.chat{max-width:none}}
 </style>
 </head>
@@ -123,21 +134,25 @@ footer{padding:26px 0;color:var(--mu);font-size:14px;text-align:center}
 <div class="hg" id="top">
 <div>
 <h1>Бот, который сам публикует объявления в ваших чатах</h1>
-<p>Для чатов-барахолок и каналов с объявлениями. Пользователь отправляет объявление один раз, а бот публикует его каждые 24 часа и удаляет предыдущее.</p>
-<div class="acts"><a class="btn mx" href="https://max.ru/SilaBotov" target="_blank" rel="noopener">Написать в Макс</a><a class="btn tg" href="https://t.me/DarianBin" target="_blank" rel="noopener">Написать в Telegram</a></div>
-<div class="sub">Тарифы и цены для пользователей назначает владелец бота</div>
 </div>
 <div class="chat hs" role="img" aria-label="Бот предлагает выбрать тариф: 7 дней или 30 дней"><p class="t">Бот объявлений</p><div class="bub"><b>Выберите тариф размещения объявления:</b><br>• Публикация каждые 24 часа (7 дней)<br>• Публикация каждые 24 часа (30 дней)</div><span class="k">📆 7 дней (ежедневно) — 1 200 ₽</span><span class="k">📆 30 дней (ежедневно) — 3 100 ₽</span><span class="k">⬅️ Назад</span></div>
 </div>
 </div>
 </header>
+<section class="intro fx">
+<div class="w">
+<p>Для чатов-барахолок и каналов с объявлениями.<br>Пользователь отправляет объявление один раз, а бот публикует его каждые 24 часа и удаляет предыдущее.</p>
+<div class="sub">Тарифы и цены для пользователей назначает владелец бота</div>
+<div class="acts"><a class="btn mx" href="https://max.ru/SilaBotov" target="_blank" rel="noopener">Написать в Макс</a><a class="btn tg" href="https://t.me/DarianBin" target="_blank" rel="noopener">Написать в Telegram</a></div>
+</div>
+</section>
 
 <section class="fx">
 <div class="w">
 <h2>От объявления до публикации за четыре шага</h2>
 <ol class="steps">
 <li data-n="1"><h3>Пользователь создаёт объявление</h3><p>Бот сам задаёт вопросы по порядку: название, цена, описание. Можно прикрепить до 10 фото, они выйдут одним аккуратным альбомом.</p></li>
-<li data-n="2"><h3>Вы проверяете в закрытом админском чате</h3><p>Каждая заявка приходит с двумя кнопками: «Принять» или «Отклонить». После отклонения появляется кнопка «Написать пользователю», чтобы связаться в личке.</p></li>
+<li data-n="2"><h3>Вы проверяете в закрытом админском чате</h3><p>Каждая заявка приходит с двумя кнопками: «Принять» или «Отклонить».<br>После отклонения появляется кнопка «Написать пользователю», чтобы связаться в личке.</p></li>
 <li data-n="3"><h3>Пользователь оплачивает размещение</h3><p>Вручную: отправляет скриншот чека, а вы проверяете перевод и подтверждаете. Или автоматически через платёжный сервис.</p></li>
 <li data-n="4"><h3>Бот публикует каждые 24 часа</h3><p>В выбранное время объявление выходит в чаты и каналы региона, а предыдущая публикация удаляется. Пользователь получает уведомление.</p></li>
 </ol>
@@ -170,12 +185,12 @@ footer{padding:26px 0;color:var(--mu);font-size:14px;text-align:center}
 <div class="w price">
 <div>
 <h2>Цены на размещение задаёт владелец бота</h2>
-<p class="lead">Отдельно для каждого региона. Например:</p>
+<p class="lead" style="font-size:22px">Отдельно для каждого региона. Например:</p>
 <ul class="pl"><li><span>7 дней (ежедневно)</span><b>1 200 ₽</b></li><li><span>30 дней (ежедневно)</span><b>3 100 ₽</b></li></ul>
 </div>
 <div>
-<h3 style="font-size:22px;font-weight:500">Автоматическая оплата</h3>
-<p class="lead" style="margin-top:10px">Подключим любой платёжный сервис, от которого вы принесёте ключи.</p>
+<h2>Автоматическая оплата</h2>
+<p class="lead" style="font-size:22px">Подключим любой платёжный сервис, от которого вы принесёте ключи.</p>
 <p class="note">Важно: большинство платёжных сервисов работают только с юрлицами.</p>
 <p class="hl">Если такого статуса нет, подойдёт ручная оплата по чекам.</p>
 </div>
@@ -198,12 +213,17 @@ footer{padding:26px 0;color:var(--mu);font-size:14px;text-align:center}
 <script>try{var v=document.getElementById("sbv");if(matchMedia("(prefers-reduced-motion: reduce)").matches){v.removeAttribute("autoplay");v.pause()}}catch(e){}</script>
 </div>
 </section>
-<footer>Сила Ботов, группа разработчиков · <a href="https://max.ru/SilaBotov" target="_blank" rel="noopener">Max</a> · <a href="https://t.me/DarianBin" target="_blank" rel="noopener">Telegram</a></footer>
+<footer>Сила Ботов. Разработка ботов и приложений. · <a href="https://max.ru/SilaBotov" target="_blank" rel="noopener">Max</a> · <a href="https://t.me/DarianBin" target="_blank" rel="noopener">Telegram</a></footer>
 <script>(function(){var c=document.getElementById("dust");if(!c||matchMedia("(prefers-reduced-motion: reduce)").matches)return;var x=c.getContext("2d"),W,H,D=Math.min(devicePixelRatio||1,2),P=[],N=7;
 function rs(){W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;x.setTransform(D,0,0,D,0,0)}
 function mk(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.5,v:Math.random()*.28+.08,s:Math.random()*6.28,f:Math.random()*.03+.008,st:Math.random()<.14}}
 function star(px,py,r){x.beginPath();x.moveTo(px,py-r);x.quadraticCurveTo(px,py,px+r,py);x.quadraticCurveTo(px,py,px,py+r);x.quadraticCurveTo(px,py,px-r,py);x.quadraticCurveTo(px,py,px,py-r);x.fill()}
 function go(){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.y-=p.v;p.s+=p.f;p.x+=Math.sin(p.s)*.25;if(p.y<-12){p.y=H+10;p.x=Math.random()*W}x.globalAlpha=.25+.6*Math.abs(Math.sin(p.s*1.7));if(p.st){x.fillStyle="#C9B8FF";x.shadowColor="#7B5CFF";x.shadowBlur=10;star(p.x,p.y,p.r*4.5)}else{x.fillStyle="#FFC94A";x.shadowColor="#FFB000";x.shadowBlur=8;x.beginPath();x.arc(p.x,p.y,p.r,0,6.283);x.fill()}}x.globalAlpha=1;requestAnimationFrame(go)}
 rs();for(var i=0;i<N;i++)P.push(mk());addEventListener("resize",rs);go()})()</script>
+<script>(function(){var g=document.querySelector(".shots");if(!g)return;var it=[].slice.call(g.children),w=innerWidth;
+function lay(){it.forEach(function(f){g.appendChild(f)});[].slice.call(g.querySelectorAll(".mcol")).forEach(function(c){c.remove()});if(innerWidth<=760)return;
+var a=document.createElement("div"),b=document.createElement("div");a.className=b.className="mcol";g.appendChild(a);g.appendChild(b);
+it.forEach(function(f){(a.offsetHeight<=b.offsetHeight?a:b).appendChild(f)})}
+lay();addEventListener("resize",function(){if((innerWidth>760)!==(w>760)){w=innerWidth;lay()}});if(document.fonts&&document.fonts.ready)document.fonts.ready.then(lay)})()</script>
 </body>
 </html>
