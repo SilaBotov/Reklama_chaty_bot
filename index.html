@@ -119,6 +119,8 @@ h2{max-width:none}.steps p,.intro p{max-width:none}
 .shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:80px;columns:auto;align-items:start}.shots figure{display:flex;flex-direction:column;margin:0;width:auto}
 @media (max-width:760px){.shots{grid-template-columns:minmax(0,1fr);gap:56px}}
 .mcol{display:flex;flex-direction:column;gap:80px;min-width:0}
+.fl{white-space:nowrap}.fl::before{content:"· "}
+@media (max-width:640px){.fl{display:block;margin-top:6px}.fl::before{content:none}}
 @media (max-width:820px){.hg,.price{grid-template-columns:1fr}.ft{grid-template-columns:1fr}section{padding:52px 0}.chat{max-width:none}}
 </style>
 </head>
@@ -213,7 +215,7 @@ h2{max-width:none}.steps p,.intro p{max-width:none}
 <script>try{var v=document.getElementById("sbv");if(matchMedia("(prefers-reduced-motion: reduce)").matches){v.removeAttribute("autoplay");v.pause()}}catch(e){}</script>
 </div>
 </section>
-<footer>Сила Ботов. Разработка ботов и приложений. · <a href="https://max.ru/SilaBotov" target="_blank" rel="noopener">Max</a> · <a href="https://t.me/DarianBin" target="_blank" rel="noopener">Telegram</a></footer>
+<footer><span class="f1">Сила Ботов. Разработка ботов и приложений.</span> <span class="fl"><a href="https://max.ru/SilaBotov" target="_blank" rel="noopener">Max</a> · <a href="https://t.me/DarianBin" target="_blank" rel="noopener">Telegram</a></span></footer>
 <script>(function(){var c=document.getElementById("dust");if(!c||matchMedia("(prefers-reduced-motion: reduce)").matches)return;var x=c.getContext("2d"),W,H,D=Math.min(devicePixelRatio||1,2),P=[],N=7;
 function rs(){W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;x.setTransform(D,0,0,D,0,0)}
 function mk(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.5,v:Math.random()*.28+.08,s:Math.random()*6.28,f:Math.random()*.03+.008,st:Math.random()<.14}}
