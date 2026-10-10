@@ -85,7 +85,6 @@ footer{padding:26px 0;color:var(--mu);font-size:14px;text-align:center}
 .hero{--b1:#B23FD0;--b2:#33E1FF}.alt{--b1:#33E1FF;--b2:#7B5CFF}.cta{--b1:#7B5CFF;--b2:#33E1FF}
 @keyframes drift{to{transform:translate(180px,140px) scale(1.2)}}
 @keyframes drift2{to{transform:translate(-200px,-120px) scale(1.15)}}
-.dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
 .chat{border:1.5px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,conic-gradient(from var(--a),#7B5CFF,#33E1FF,#B23FD0,#FFC94A,#7B5CFF) border-box;animation:spin 9s linear infinite;box-shadow:0 0 30px rgba(91,69,224,.4)}
 @keyframes spin{to{--a:360deg}}
 .chat .t{color:#33E1FF;text-shadow:0 0 10px rgba(51,225,255,.6)}
@@ -111,7 +110,7 @@ footer{padding:26px 0;color:var(--mu);font-size:14px;text-align:center}
 .cta-arw{width:110px;height:auto;flex:none}.cta-arw.flip{transform:scaleX(-1)}
 .acts.mid{align-items:center;gap:14px}
 @media (max-width:900px){.cta-arw,.hero-arw{display:none}}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}.dust{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
 .steps p,.ft p,.lead,.cap{color:#DAD7F7}
 .hl{margin:14px 0 0;padding:13px 18px;border:1px solid rgba(107,85,240,.55);border-left:3px solid var(--or);background:linear-gradient(135deg,rgba(123,92,255,.34),rgba(52,86,230,.2));box-shadow:0 0 20px rgba(91,69,224,.28);border-radius:0 12px 12px 0;color:#fff;font-weight:500;font-size:16px}
 .try{padding:56px 0;text-align:center;--b1:#33E1FF;--b2:#7B5CFF}.try h2,.try .lead{margin-left:auto;margin-right:auto}
@@ -177,7 +176,7 @@ nav{flex-wrap:wrap;gap:12px}.navl{display:flex;align-items:center;gap:22px;flex-
 section.hero{padding-top:28px}
 @media (max-width:900px){.site-header__inner{flex-wrap:wrap}.site-nav{order:3;width:100%;justify-content:flex-start;gap:12px}.site-socials{margin-left:auto}.site-footer__inner{grid-template-columns:minmax(0,1fr)}.site-footer__links{justify-content:flex-start}}
 @media (max-width:480px){.site-nav{gap:8px}.site-nav a{font-size:.88rem}.brand small{display:none}}
-.demo{margin:36px auto 0;max-width:420px;min-height:760px}
+.demo{margin:0 auto;max-width:420px;min-height:760px}
 </style>
 <link rel="icon" type="image/png" href="https://silabotov.ru/assets/img/logo-silabotov.png">
 <link rel="apple-touch-icon" href="https://silabotov.ru/assets/img/logo-silabotov.png">
@@ -185,7 +184,6 @@ section.hero{padding-top:28px}
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="ag" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7B5CFF"/><stop offset=".55" stop-color="#33E1FF"/><stop offset="1" stop-color="#FFC94A"/></linearGradient></defs></svg>
-<canvas id="dust" class="dust" aria-hidden="true"></canvas>
 <header class="site-header">
 <div class="container site-header__inner">
 <a class="brand" href="https://silabotov.ru/">
@@ -240,8 +238,6 @@ section.hero{padding-top:28px}
 
 <section class="fx">
 <div class="w">
-<h2>Как это выглядит: <span class="nw">бот в движении</span></h2>
-<p class="lead">Короткая анимация: от создания объявления до публикации каждые 24 часа.</p>
 <div class="demo" id="bot-demo" role="img" aria-label="Анимация: как бот принимает, проверяет и публикует объявления"></div>
 </div>
 </section>
@@ -331,12 +327,6 @@ section.hero{padding-top:28px}
 </div>
 </footer>
 <script>document.querySelectorAll("[data-current-year]").forEach(function(e){e.textContent=new Date().getFullYear()})</script>
-<script>(function(){var c=document.getElementById("dust");if(!c||matchMedia("(prefers-reduced-motion: reduce)").matches)return;var x=c.getContext("2d"),W,H,D=Math.min(devicePixelRatio||1,2),P=[],N=7;
-function rs(){W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;x.setTransform(D,0,0,D,0,0)}
-function mk(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.5,v:Math.random()*.28+.08,s:Math.random()*6.28,f:Math.random()*.03+.008,st:Math.random()<.14}}
-function star(px,py,r){x.beginPath();x.moveTo(px,py-r);x.quadraticCurveTo(px,py,px+r,py);x.quadraticCurveTo(px,py,px,py+r);x.quadraticCurveTo(px,py,px-r,py);x.quadraticCurveTo(px,py,px,py-r);x.fill()}
-function go(){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.y-=p.v;p.s+=p.f;p.x+=Math.sin(p.s)*.25;if(p.y<-12){p.y=H+10;p.x=Math.random()*W}x.globalAlpha=.25+.6*Math.abs(Math.sin(p.s*1.7));if(p.st){x.fillStyle="#C9B8FF";x.shadowColor="#7B5CFF";x.shadowBlur=10;star(p.x,p.y,p.r*4.5)}else{x.fillStyle="#FFC94A";x.shadowColor="#FFB000";x.shadowBlur=8;x.beginPath();x.arc(p.x,p.y,p.r,0,6.283);x.fill()}}x.globalAlpha=1;requestAnimationFrame(go)}
-rs();for(var i=0;i<N;i++)P.push(mk());addEventListener("resize",rs);go()})()</script>
 <script>(function(){var g=document.querySelector(".shots");if(!g)return;var it=[].slice.call(g.children),w=innerWidth;
 function lay(){it.forEach(function(f){g.appendChild(f)});[].slice.call(g.querySelectorAll(".mcol")).forEach(function(c){c.remove()});if(innerWidth<=760)return;
 var a=document.createElement("div"),b=document.createElement("div");a.className=b.className="mcol";g.appendChild(a);g.appendChild(b);
