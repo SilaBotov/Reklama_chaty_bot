@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Демо: бот автопубликации объявлений</title>
+<style>
+:root{--bg:#06071A;--tx:#F1F0FF;--mu:#DAD7F7;--card:#0E1033;--bub:#10143F;--ln:rgba(123,92,255,.35);--or:#FFB000;--vi:#7B5CFF;--cy:#33E1FF;--ok:#2fbf71;--no:#e5484d}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--tx);font:14px/1.45 Montserrat,"Helvetica Neue",Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px;overflow:hidden}
+.phone{width:min(400px,100%);height:min(660px,calc(100vh - 100px));min-height:460px;background:var(--card);border-radius:28px;border:1.5px solid #5B45E0;box-shadow:0 0 34px rgba(91,69,224,.4);display:flex;flex-direction:column;overflow:hidden}
+.head{padding:12px 16px;border-bottom:1px solid var(--ln);display:flex;gap:10px;align-items:center}
+.ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--vi),var(--cy));display:grid;place-items:center;font-size:19px;flex:none}
+.head b{display:block;font-weight:500;font-size:15px;color:var(--cy);text-shadow:0 0 10px rgba(51,225,255,.5)}
+.head small{color:var(--mu);font-size:12px;opacity:.8}
+.chat{flex:1;overflow:hidden;padding:12px;display:flex;flex-direction:column;justify-content:flex-end;gap:7px}
+.m{max-width:90%;padding:9px 12px;border-radius:14px 14px 14px 4px;background:var(--bub);border:1px solid var(--ln);opacity:0;transform:translateY(10px);transition:.35s;overflow:hidden;overflow-wrap:anywhere;font-size:13.5px}
+.m.in{opacity:1;transform:none}
+.m.me{align-self:flex-end;border-radius:14px 14px 4px 14px;background:#2a2470}
+.m.deleted{opacity:0;max-height:0!important;padding:0 12px;margin:-4px 0;border-width:0;transition:.6s}
+.m.wide{max-width:96%}
+.m i{color:var(--mu);font-style:italic}
+.btns{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+.btns span{background:#ffffff12;border:1px solid var(--ln);border-radius:9px;padding:7px 10px;text-align:center;transition:.25s}
+.btns.row{flex-direction:row}.btns.row span{flex:1}
+.btns .p{background:linear-gradient(180deg,#FFC21A,#FF8A00);color:#2A1500;border-color:transparent;transform:scale(.97)}
+.btns .ok.p{background:var(--ok);color:#fff}.btns .no.p{background:var(--no);color:#fff}
+.dots{display:flex;gap:4px;padding:4px 2px}.dots i{width:6px;height:6px;border-radius:50%;background:var(--mu);animation:b 1s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{transform:translateY(-4px);opacity:.4}}
+.sep{align-self:center;background:#ffffff14;color:var(--mu);font-size:12px;padding:3px 12px;border-radius:12px;opacity:0;transition:.35s}.sep.in{opacity:1}
+.album{display:grid;grid-template-columns:1fr 1fr;gap:3px;border-radius:10px;overflow:hidden;margin-bottom:6px}
+.album div{aspect-ratio:4/3;display:grid;place-items:center;font-size:26px}
+.album div:nth-child(1){background:#3b3a9a}.album div:nth-child(2){background:#1f7a8c}.album div:nth-child(3){background:#8a4dff}.album div:nth-child(4){background:#a8602b}
+.shot{background:#fff;color:#222;border-radius:8px;padding:8px 10px;text-align:center}.shot b{color:#1a9d57}
+.tag{color:var(--mu);font-size:12px;margin-top:4px;opacity:.85}
+.cap{width:min(400px,100%);text-align:center;min-height:42px}
+.cap b{display:block;color:var(--or);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.cap span{font-size:14px}
+.steps{display:flex;gap:6px;justify-content:center}.steps i{width:28px;height:4px;border-radius:2px;background:#ffffff22;transition:.3s}.steps i.on{background:var(--cy)}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="head"><div class="ava" id="ava">🤖</div><div><b id="title">Бот объявлений</b><small id="sub">бот</small></div></div>
+  <div class="chat" id="chat"></div>
+</div>
+<div class="cap"><b id="capT"></b><span id="capS"></span></div>
+<div class="steps" id="steps"><i></i><i></i><i></i><i></i></div>
+
+<script>
+const chat=document.getElementById('chat'),$=id=>document.getElementById(id);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const photos='<div class="album"><div>🚲</div><div>🚲</div><div>🚲</div><div>🚲</div></div>';
+const AD='Продам велосипед, состояние хорошее. 12 000 ₽. Пишите в личные сообщения.';
+const INFO='ℹ️ Тип публикации: Повторяющаяся<br>📅 Срок: 1 неделя (7 дней)<br>🔄 Интервал: Каждые 24 часа';
+
+function msg(html,cls){const d=document.createElement('div');d.className='m '+(cls||'');d.innerHTML=html;chat.appendChild(d);
+  d.style.maxHeight='700px';requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('in')));return d}
+async function bot(html,cls,wait=650){const t=msg('<div class="dots"><i></i><i></i><i></i></div>');await sleep(wait);t.remove();return msg(html,cls)}
+function sep(t){const d=document.createElement('div');d.className='sep';d.textContent=t;chat.appendChild(d);requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('in')));return d}
+function press(el,i){const s=el.querySelectorAll('.btns span')[i];s&&s.classList.add('p')}
+function head(t,s,a){$('title').textContent=t;$('sub').textContent=s;$('ava').textContent=a;chat.innerHTML=''}
+function cap(n,t,s){$('capT').textContent=t;$('capS').textContent=s;document.querySelectorAll('#steps i').forEach((e,i)=>e.classList.toggle('on',i<=n))}
+
+async function run(){
+for(;;){
+  /* 1. Пользователь создаёт объявление */
+  head('Бот объявлений','@Reklama_chaty_bot','🤖');cap(0,'Шаг 1 · Пользователь создаёт объявление','Бот сам задаёт вопросы по порядку, фото — до 10 штук одним альбомом');
+  await sleep(500);
+  let m=await bot('<b>Выберите тариф размещения объявления:</b><br>• Публикация каждые 24 часа (7 дней)<br>• Публикация каждые 24 часа (30 дней)<div class="btns"><span>📆 7 дней (ежедневно) — 1 200 ₽</span><span>📆 30 дней (ежедневно) — 3 100 ₽</span><span>⬅️ Назад</span></div>','wide');
+  await sleep(1300);press(m,0);await sleep(700);
+  m=await bot('<b>Добавление объявления</b><br><b>Регион:</b> Барахолка<br><br>💬 Чаты:<br>Барахолка Центр<br>Барахолка Север<br><br><i>Прикрепите фото/видео (от 0 до 10) или пропустите шаг, нажав на кнопку Далее ➡️</i><div class="btns row"><span>Далее ➡️</span><span>⬅️ Назад</span></div>','wide');
+  await sleep(1200);msg(photos+'<div class="tag">4 фото</div>','me');await sleep(900);press(m,0);await sleep(700);
+  await bot('✏️ Отправьте текст объявления');await sleep(900);
+  msg(AD,'me');await sleep(1000);
+  await bot('⏳ <b>Ваше объявление отправлено на модерацию</b><br>'+INFO,'wide');await sleep(2200);
+
+  /* 2. Модерация */
+  head('Админский чат','закрытый','🛡');cap(1,'Шаг 2 · Вы проверяете в закрытом админском чате','Каждая заявка приходит с двумя кнопками: «Принять» или «Отклонить»');
+  await sleep(400);
+  const a=msg('Пользователь @ivan_example Иван хочет опубликовать объявление:<br><br><b>Регион:</b> Барахолка<br>'+AD+'<br><br>🆔 757<br>'+INFO+'<br>💰 <b>Стоимость:</b> 1 200 ₽<div class="btns row"><span class="ok">✅ Принять</span><span class="no">⛔ Отклонить</span></div>','wide');
+  await sleep(2200);press(a,0);a.querySelector('.ok').classList.add('p');await sleep(1600);
+
+  /* 3. Оплата */
+  head('Бот объявлений','@Reklama_chaty_bot','🤖');cap(2,'Шаг 3 · Пользователь оплачивает размещение','Вручную: скриншот чека — или автоматически через платёжный сервис');
+  await sleep(400);
+  m=await bot('✅ <b>Ваше объявление одобрено!</b><br><br>🆔 ID объявления: 757<br>📍 Будет размещено в: Барахолка<br><br>💳 <b>Выберите способ оплаты:</b><div class="btns"><span>💰 1plat.money</span><span>🎯 AAIO.so</span></div>','wide');
+  await sleep(1800);msg('<div class="shot"><b>✓ Перевод выполнен</b><br>1 200 ₽</div>','me');await sleep(1000);
+  await bot('✅ <b>Чек получен!</b><br>Ваш чек передан администратору для проверки. Ожидайте подтверждения оплаты.','wide');await sleep(1800);
+  head('Админский чат','закрытый','🛡');await sleep(300);
+  m=msg('💳 <b>ЧЕК ДЛЯ РУЧНОЙ ОПЛАТЫ</b><br><br>👤 <b>Пользователь:</b> @ivan_example Иван<br>🆔 <b>ID объявления:</b> 757<br>💳 <b>Сумма:</b> 1 200 ₽<br><br>📸 <b>Чек получен!</b> Проверьте перевод и подтвердите оплату.<div class="btns row"><span class="ok">✅ Подтвердить оплату</span><span class="no">❌ Отклонить</span></div>','wide');
+  await sleep(2200);m.querySelector('.ok').classList.add('p');await sleep(1600);
+
+  /* 4. Публикация */
+  head('Барахолка Центр','чат объявлений','🛒');cap(3,'Шаг 4 · Бот публикует каждые 24 часа','Предыдущая публикация удаляется, новая выходит в выбранное время');
+  await sleep(400);
+  let prev=null;
+  for(let d=1;d<=3;d++){
+    if(prev){const s=sep('через 24 часа');await sleep(900);prev.classList.add('deleted');await sleep(900);s.remove()}
+    prev=msg(photos+AD+'<div class="tag">День '+d+' · 12:00</div>','wide');
+    await sleep(2200);
+  }
+  await sleep(1500);
+}}
+run();
+</script>
+</body>
+</html>
