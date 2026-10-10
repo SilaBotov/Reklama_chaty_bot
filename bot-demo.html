@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Демо: бот автопубликации объявлений</title>
 <style>
-html{font-size:min(1vw,1vh)}
+html{font-size:7.2px}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{overflow:hidden;display:grid;place-items:center;color:#111;font:2.5rem/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Inter","Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#2fc263 0%,#08a6c4 24%,#017dfe 50%,#0a4fd0 76%,#001338 100%)}
-.stage{position:relative;width:100rem;height:100rem;overflow:hidden}
+.stage{position:relative;flex:none;width:100rem;height:100rem;overflow:hidden;transform:scale(var(--s,1))}
 .stage::before{content:"";position:absolute;inset:0;background:radial-gradient(70rem 50rem at 100% 100%,rgba(20,140,255,.55),transparent 70%)}
 .phone{position:absolute;left:17.2rem;top:4.6rem;width:65.6rem;height:94.4rem;border-radius:9.2rem;padding:.7rem;background:linear-gradient(135deg,#f3f3f5 0%,#a4a4aa 22%,#e8e8ec 46%,#8d8d93 72%,#dcdce0 100%);box-shadow:0 0 0 .15rem rgba(0,0,0,.35),0 3rem 7rem rgba(0,20,80,.5)}
 .sbtn{position:absolute;width:.7rem;border-radius:.3rem;background:linear-gradient(90deg,#8e8e94,#d0d0d5)}
@@ -29,7 +29,7 @@ body{overflow:hidden;display:grid;place-items:center;color:#111;font:2.5rem/1.35
 .tt small{display:block;color:#7a7f87;font-size:2rem;line-height:1.2;white-space:nowrap}
 .chat{position:absolute;left:0;right:0;top:0;bottom:12rem;padding:19rem 2.4rem 1.6rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.9rem;overflow:hidden;transition:opacity .25s;-webkit-mask-image:linear-gradient(to bottom,transparent 13rem,#000 21rem);mask-image:linear-gradient(to bottom,transparent 13rem,#000 21rem)}
 .chat.sw{opacity:0}
-.mw{max-width:86%;opacity:0;transform:translateY(1.4rem);transition:opacity .4s,transform .4s,max-height .6s,margin .6s;overflow:hidden}
+.mw{flex:none;max-width:86%;opacity:0;transform:translateY(1.4rem);transition:opacity .4s,transform .4s,max-height .6s,margin .6s;overflow:hidden}
 .mw.in{opacity:1;transform:none}
 .mw.me{align-self:flex-end}
 .mw.wide{max-width:94%}
@@ -47,10 +47,10 @@ body{overflow:hidden;display:grid;place-items:center;color:#111;font:2.5rem/1.35
 .dots i{width:1.2rem;height:1.2rem;border-radius:50%;background:#9aa2aa;animation:bn 1s infinite}
 .dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
 @keyframes bn{50%{transform:translateY(-.7rem);opacity:.4}}
-.sep{align-self:center;background:rgba(40,60,80,.38);color:#fff;font-size:2rem;padding:.4rem 1.8rem;border-radius:2rem;backdrop-filter:blur(.6rem);opacity:0;transition:opacity .35s}
+.sep{flex:none;align-self:center;background:rgba(40,60,80,.38);color:#fff;font-size:2rem;padding:.4rem 1.8rem;border-radius:2rem;backdrop-filter:blur(.6rem);opacity:0;transition:opacity .35s}
 .sep.in{opacity:1}
 .album{display:grid;grid-template-columns:1fr 1fr;gap:.3rem;border-radius:1.6rem;overflow:hidden;margin:-.3rem -.7rem .8rem}
-.album div{aspect-ratio:4/3;display:grid;place-items:center;font-size:5rem}
+.album div{aspect-ratio:16/10;display:grid;place-items:center;font-size:5rem}
 .album div:nth-child(1){background:#6e8fe8}.album div:nth-child(2){background:#4bb3c4}.album div:nth-child(3){background:#9a86f0}.album div:nth-child(4){background:#e0a25e}
 .shot{background:#fff;color:#222;border-radius:1.2rem;padding:1rem 1.4rem;text-align:center;border:.1rem solid #d6e6c4}
 .shot b{color:#1a9d57}
@@ -111,21 +111,30 @@ body{overflow:hidden;display:grid;place-items:center;color:#111;font:2.5rem/1.35
 <script>
 const $=id=>document.getElementById(id),stage=$('stage'),chat=$('chat'),tapEl=$('tap'),banner=$('banner');
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function scaleStage(){document.documentElement.style.setProperty('--s',Math.min(innerWidth,innerHeight)/720)}
+scaleStage();addEventListener('resize',scaleStage);
 const photos='<div class="album"><div>🚲</div><div>🚲</div><div>🚲</div><div>🚲</div></div>';
 const AD='Продам велосипед, состояние хорошее. 12 000 ₽. Пишите в личные сообщения.';
 const INFO='ℹ️ Тип публикации: Повторяющаяся<br>📅 Срок: 1 неделя (7 дней)<br>🔄 Интервал: Каждые 24 часа';
 let clock=12*60;
 const tm=()=>{const m=clock++;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
 
+function fit(){
+  const cs=getComputedStyle(chat),avail=chat.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),gap=parseFloat(cs.rowGap)||0;
+  for(let g=0;g<20;g++){
+    const k=[...chat.children].filter(e=>!e.classList.contains('deleted'));
+    const sum=k.reduce((s,e)=>s+e.offsetHeight,0)+gap*Math.max(0,k.length-1);
+    if(sum<=avail||k.length<=1)break;
+    const o=k[0];o.classList.add('deleted');setTimeout(()=>o.remove(),800)}}
 function msg(html,o={}){
   const w=document.createElement('div');w.className='mw'+(o.me?' me':'')+(o.wide?' wide':'');
   w.innerHTML='<div class="b">'+html+(o.notime?'':'<i class="tm">'+(o.time||tm())+'</i>')+'</div>'+(o.kb?'<div class="kb'+(o.row?' row':'')+'">'+o.kb+'</div>':'');
   w.style.maxHeight='900px';chat.appendChild(w);
-  requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.add('in')));return w}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.add('in')));fit();return w}
 async function bot(html,o={},wait=650){const t=msg('<div class="dots"><i></i><i></i><i></i></div>',{notime:1});await sleep(wait);t.remove();return msg(html,o)}
 function sep(t){const d=document.createElement('div');d.className='sep';d.textContent=t;chat.appendChild(d);requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('in')));return d}
-function tap(el){const s=stage.getBoundingClientRect(),r=el.getBoundingClientRect();
-  tapEl.style.left=(r.left+r.width/2-s.left)+'px';tapEl.style.top=(r.top+r.height/2-s.top)+'px';
+function tap(el){const s=stage.getBoundingClientRect(),r=el.getBoundingClientRect(),k=stage.offsetWidth/s.width;
+  tapEl.style.left=((r.left+r.width/2-s.left)*k)+'px';tapEl.style.top=((r.top+r.height/2-s.top)*k)+'px';
   tapEl.classList.remove('go');void tapEl.offsetWidth;tapEl.classList.add('go')}
 function press(w,i){const b=w.querySelectorAll('.kb span')[i];if(!b)return;tap(b);setTimeout(()=>b.classList.add('p'),260)}
 async function head(t,s,a){chat.classList.add('sw');await sleep(260);chat.innerHTML='';
