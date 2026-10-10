@@ -5,101 +5,178 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Демо: бот автопубликации объявлений</title>
 <style>
-:root{--bg:#06071A;--tx:#F1F0FF;--mu:#DAD7F7;--card:#0E1033;--bub:#10143F;--ln:rgba(123,92,255,.35);--or:#FFB000;--vi:#7B5CFF;--cy:#33E1FF;--ok:#2fbf71;--no:#e5484d}
+html{font-size:min(1vw,1vh)}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--tx);font:14px/1.45 Montserrat,"Helvetica Neue",Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px;overflow:hidden}
-.phone{width:min(400px,100%);height:min(660px,calc(100vh - 100px));min-height:460px;background:var(--card);border-radius:28px;border:1.5px solid #5B45E0;box-shadow:0 0 34px rgba(91,69,224,.4);display:flex;flex-direction:column;overflow:hidden}
-.head{padding:12px 16px;border-bottom:1px solid var(--ln);display:flex;gap:10px;align-items:center}
-.ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--vi),var(--cy));display:grid;place-items:center;font-size:19px;flex:none}
-.head b{display:block;font-weight:500;font-size:15px;color:var(--cy);text-shadow:0 0 10px rgba(51,225,255,.5)}
-.head small{color:var(--mu);font-size:12px;opacity:.8}
-.chat{flex:1;overflow:hidden;padding:12px;display:flex;flex-direction:column;justify-content:flex-end;gap:7px}
-.m{max-width:90%;padding:9px 12px;border-radius:14px 14px 14px 4px;background:var(--bub);border:1px solid var(--ln);opacity:0;transform:translateY(10px);transition:.35s;overflow:hidden;overflow-wrap:anywhere;font-size:13.5px}
-.m.in{opacity:1;transform:none}
-.m.me{align-self:flex-end;border-radius:14px 14px 4px 14px;background:#2a2470}
-.m.deleted{opacity:0;max-height:0!important;padding:0 12px;margin:-4px 0;border-width:0;transition:.6s}
-.m.wide{max-width:96%}
-.m i{color:var(--mu);font-style:italic}
-.btns{display:flex;flex-direction:column;gap:5px;margin-top:8px}
-.btns span{background:#ffffff12;border:1px solid var(--ln);border-radius:9px;padding:7px 10px;text-align:center;transition:.25s}
-.btns.row{flex-direction:row}.btns.row span{flex:1}
-.btns .p{background:linear-gradient(180deg,#FFC21A,#FF8A00);color:#2A1500;border-color:transparent;transform:scale(.97)}
-.btns .ok.p{background:var(--ok);color:#fff}.btns .no.p{background:var(--no);color:#fff}
-.dots{display:flex;gap:4px;padding:4px 2px}.dots i{width:6px;height:6px;border-radius:50%;background:var(--mu);animation:b 1s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
-@keyframes b{50%{transform:translateY(-4px);opacity:.4}}
-.sep{align-self:center;background:#ffffff14;color:var(--mu);font-size:12px;padding:3px 12px;border-radius:12px;opacity:0;transition:.35s}.sep.in{opacity:1}
-.album{display:grid;grid-template-columns:1fr 1fr;gap:3px;border-radius:10px;overflow:hidden;margin-bottom:6px}
-.album div{aspect-ratio:4/3;display:grid;place-items:center;font-size:26px}
-.album div:nth-child(1){background:#3b3a9a}.album div:nth-child(2){background:#1f7a8c}.album div:nth-child(3){background:#8a4dff}.album div:nth-child(4){background:#a8602b}
-.shot{background:#fff;color:#222;border-radius:8px;padding:8px 10px;text-align:center}.shot b{color:#1a9d57}
-.tag{color:var(--mu);font-size:12px;margin-top:4px;opacity:.85}
-.cap{width:min(400px,100%);text-align:center;min-height:42px}
-.cap b{display:block;color:var(--or);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
-.cap span{font-size:14px}
-.steps{display:flex;gap:6px;justify-content:center}.steps i{width:28px;height:4px;border-radius:2px;background:#ffffff22;transition:.3s}.steps i.on{background:var(--cy)}
+body{overflow:hidden;display:grid;place-items:center;color:#111;font:2.5rem/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Inter","Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#2fc263 0%,#08a6c4 24%,#017dfe 50%,#0a4fd0 76%,#001338 100%)}
+.stage{position:relative;width:100rem;height:100rem;overflow:hidden}
+.stage::before{content:"";position:absolute;inset:0;background:radial-gradient(70rem 50rem at 100% 100%,rgba(20,140,255,.55),transparent 70%)}
+.phone{position:absolute;left:17.2rem;top:4.6rem;width:65.6rem;height:94.4rem;border-radius:9.2rem;padding:.7rem;background:linear-gradient(135deg,#f3f3f5 0%,#a4a4aa 22%,#e8e8ec 46%,#8d8d93 72%,#dcdce0 100%);box-shadow:0 0 0 .15rem rgba(0,0,0,.35),0 3rem 7rem rgba(0,20,80,.5)}
+.sbtn{position:absolute;width:.7rem;border-radius:.3rem;background:linear-gradient(90deg,#8e8e94,#d0d0d5)}
+.bez{width:100%;height:100%;border-radius:8.5rem;background:#050505;padding:.9rem}
+.screen{position:relative;width:100%;height:100%;border-radius:7.7rem;overflow:hidden;background:#cfe3ee}
+.wall{position:absolute;inset:0;background:radial-gradient(rgba(255,255,255,.3) .16rem,transparent .22rem) 0 0/2.4rem 2.4rem,linear-gradient(165deg,#9fc3ee 0%,#b5ddd0 52%,#d4ecc4 100%)}
+.isl{position:absolute;left:50%;top:2rem;width:19rem;height:5.6rem;transform:translateX(-50%);background:#000;border-radius:3rem;z-index:30}
+.isl::after{content:"";position:absolute;right:2rem;top:50%;width:2.4rem;height:2.4rem;transform:translateY(-50%);border-radius:50%;background:radial-gradient(#1b2d62,#04060f 70%)}
+.status{position:absolute;top:2rem;left:0;right:0;height:5.6rem;display:flex;justify-content:space-between;align-items:center;padding:0 6.4rem 0 7.6rem;z-index:25;font-weight:700;font-size:3rem;color:#111}
+.status .ic{display:flex;gap:1rem;align-items:center}
+.hd{position:absolute;top:9.6rem;left:3rem;right:3rem;display:flex;align-items:center;justify-content:space-between;z-index:20}
+.gl{background:rgba(255,255,255,.86);backdrop-filter:blur(1.2rem);box-shadow:0 .2rem 1.4rem rgba(0,0,0,.09)}
+.back,.ava{width:6.8rem;height:6.8rem;display:grid;place-items:center;border-radius:50%}
+.ava{background:linear-gradient(135deg,#7B5CFF,#33E1FF);font-size:3.6rem;box-shadow:none}
+.tt{padding:.8rem 3rem;border-radius:5rem;text-align:center;min-width:25rem;max-width:36rem}
+.tt b{display:block;font-size:2.6rem;font-weight:600;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt small{display:block;color:#7a7f87;font-size:2rem;line-height:1.2;white-space:nowrap}
+.chat{position:absolute;left:0;right:0;top:0;bottom:12rem;padding:19rem 2.4rem 1.6rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.9rem;overflow:hidden;transition:opacity .25s;-webkit-mask-image:linear-gradient(to bottom,transparent 13rem,#000 21rem);mask-image:linear-gradient(to bottom,transparent 13rem,#000 21rem)}
+.chat.sw{opacity:0}
+.mw{max-width:86%;opacity:0;transform:translateY(1.4rem);transition:opacity .4s,transform .4s,max-height .6s,margin .6s;overflow:hidden}
+.mw.in{opacity:1;transform:none}
+.mw.me{align-self:flex-end}
+.mw.wide{max-width:94%}
+.mw.deleted{opacity:0;max-height:0!important;margin:-.45rem 0}
+.b{position:relative;background:#fff;color:#111;border-radius:2.4rem 2.4rem 2.4rem .6rem;padding:1.1rem 1.7rem 1.4rem;font-size:2.4rem;line-height:1.3;box-shadow:0 .1rem .2rem rgba(0,0,0,.08);overflow-wrap:anywhere}
+.me .b{background:#e1ffc7;border-radius:2.4rem 2.4rem .6rem 2.4rem}
+.b i.t{color:#6c747c;font-style:italic}
+.tm{float:right;margin:1.2rem 0 -.5rem 1.4rem;font-size:1.7rem;color:#8a9199;font-style:normal}
+.me .tm{color:#5da95b}
+.kb{display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem}
+.kb.row{flex-direction:row}
+.kb span{flex:1;text-align:center;padding:1.1rem 1rem;border-radius:1.8rem;background:rgba(36,58,86,.42);color:#fff;font-size:2.3rem;font-weight:500;backdrop-filter:blur(.8rem);transition:background .25s}
+.kb span.p{background:rgba(36,58,86,.74)}
+.dots{display:flex;gap:.6rem;padding:1rem .4rem 1.1rem}
+.dots i{width:1.2rem;height:1.2rem;border-radius:50%;background:#9aa2aa;animation:bn 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes bn{50%{transform:translateY(-.7rem);opacity:.4}}
+.sep{align-self:center;background:rgba(40,60,80,.38);color:#fff;font-size:2rem;padding:.4rem 1.8rem;border-radius:2rem;backdrop-filter:blur(.6rem);opacity:0;transition:opacity .35s}
+.sep.in{opacity:1}
+.album{display:grid;grid-template-columns:1fr 1fr;gap:.3rem;border-radius:1.6rem;overflow:hidden;margin:-.3rem -.7rem .8rem}
+.album div{aspect-ratio:4/3;display:grid;place-items:center;font-size:5rem}
+.album div:nth-child(1){background:#6e8fe8}.album div:nth-child(2){background:#4bb3c4}.album div:nth-child(3){background:#9a86f0}.album div:nth-child(4){background:#e0a25e}
+.shot{background:#fff;color:#222;border-radius:1.2rem;padding:1rem 1.4rem;text-align:center;border:.1rem solid #d6e6c4}
+.shot b{color:#1a9d57}
+.tag{color:#7a828a;font-size:2rem;margin-top:.3rem}
+.inp{position:absolute;left:3rem;right:3rem;bottom:3.6rem;display:flex;gap:1.4rem;align-items:center;z-index:20}
+.inp .c{width:6.6rem;height:6.6rem;border-radius:50%;display:grid;place-items:center}
+.inp .f{flex:1;height:6.6rem;border-radius:3.4rem;color:#9aa0a8;padding:0 2.6rem;display:flex;align-items:center;font-size:2.5rem}
+.hi{position:absolute;bottom:1.1rem;left:50%;width:22rem;height:.8rem;margin-left:-11rem;border-radius:.4rem;background:#111;opacity:.85;z-index:21}
+.banner{position:absolute;left:50%;top:0;width:60rem;transform:translate(-50%,-34rem);z-index:40;background:rgba(255,255,255,.94);backdrop-filter:blur(1.6rem);border-radius:4rem;padding:1.8rem 2.2rem;display:flex;gap:2rem;align-items:center;box-shadow:0 1rem 3rem rgba(0,30,90,.3);transition:transform .7s cubic-bezier(.2,.9,.2,1)}
+.banner.show{transform:translate(-50%,15rem)}
+.num{flex:none;width:8.2rem;height:8.2rem;border-radius:2.2rem;background:linear-gradient(135deg,#7B5CFF,#33E1FF);color:#fff;display:grid;place-items:center;font-size:4.4rem;font-weight:800}
+.bt{min-width:0;flex:1}
+.bt b{display:block;font-size:2.4rem;font-weight:700;line-height:1.2;color:#111}
+.bt span{display:block;font-size:2.1rem;line-height:1.25;color:#5b6168;margin-top:.2rem}
+.pg{display:flex;gap:.6rem;margin-top:1rem}
+.pg i{flex:1;height:.6rem;border-radius:.3rem;background:#d5dae1;transition:background .3s}
+.pg i.on{background:#2481cc}
+.tap{position:absolute;left:0;top:0;width:15rem;height:15rem;margin:-7.5rem 0 0 -7.5rem;border-radius:50%;pointer-events:none;z-index:50;opacity:0;background:radial-gradient(circle,rgba(196,210,248,0) 0 36%,rgba(196,210,248,.82) 38% 68%,rgba(196,210,248,0) 70%)}
+.tap.go{animation:tap 1s ease-out forwards}
+@keyframes tap{0%{opacity:0;transform:scale(.4)}25%{opacity:1;transform:scale(1)}55%{opacity:1;transform:scale(.82)}100%{opacity:0;transform:scale(1.15)}}
 </style>
 </head>
 <body>
-<div class="phone">
-  <div class="head"><div class="ava" id="ava">🤖</div><div><b id="title">Бот объявлений</b><small id="sub">бот</small></div></div>
-  <div class="chat" id="chat"></div>
+<div class="stage" id="stage">
+  <div class="phone">
+    <i class="sbtn" style="left:-.5rem;top:16rem;height:4rem"></i>
+    <i class="sbtn" style="left:-.5rem;top:24rem;height:7rem"></i>
+    <i class="sbtn" style="left:-.5rem;top:33rem;height:7rem"></i>
+    <i class="sbtn" style="right:-.5rem;top:28rem;height:11rem"></i>
+    <div class="bez"><div class="screen">
+      <div class="wall"></div>
+      <div class="chat" id="chat"></div>
+      <div class="isl"></div>
+      <div class="status"><span>9:41</span>
+        <span class="ic">
+          <svg viewBox="0 0 18 12" width="4.2rem" height="2.8rem" fill="#111"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>
+          <svg viewBox="0 0 17 12" width="4rem" height="2.9rem" fill="#111"><path d="M8.5 2.2c2.4 0 4.6.9 6.2 2.5l1-1.1C13.8 1.7 11.3.6 8.5.6S3.2 1.7 1.3 3.6l1 1.1c1.6-1.6 3.8-2.5 6.2-2.5zm0 3.4c1.5 0 2.8.6 3.8 1.5l1-1.1C12.1 4.8 10.4 4 8.5 4s-3.6.8-4.8 2l1 1.1c1-.9 2.3-1.5 3.8-1.5zm0 3.3c-.7 0-1.3.3-1.8.7L8.5 11.5l1.8-1.9c-.5-.4-1.1-.7-1.8-.7z"/></svg>
+          <svg viewBox="0 0 28 13" width="6.6rem" height="3.1rem" fill="#111"><rect x=".5" y=".5" width="24" height="12" rx="3.6" fill="none" stroke="#111" opacity=".4"/><rect x="2" y="2" width="21" height="9" rx="2.4"/><path d="M26 4.5v4c.9-.3 1.5-1.2 1.5-2s-.6-1.7-1.5-2z" opacity=".45"/></svg>
+        </span>
+      </div>
+      <div class="hd">
+        <div class="back gl"><svg viewBox="0 0 12 20" width="2.6rem" height="3.6rem"><path d="M10 2 2 10l8 8" fill="none" stroke="#007aff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="tt gl"><b id="title">Бот объявлений</b><small id="sub">бот</small></div>
+        <div class="ava gl" id="ava">🤖</div>
+      </div>
+      <div class="inp">
+        <div class="c gl"><svg viewBox="0 0 24 24" width="3.6rem" height="3.6rem"><path d="M16.5 6.5 8 15a2.1 2.1 0 0 0 3 3l8.2-8.4a4 4 0 0 0-5.7-5.7L5.4 12.2a6 6 0 0 0 8.5 8.5l6-6" fill="none" stroke="#2c2f33" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+        <div class="f gl">Сообщение</div>
+        <div class="c gl"><svg viewBox="0 0 24 24" width="3.6rem" height="3.6rem"><rect x="9" y="3" width="6" height="12" rx="3" fill="none" stroke="#2c2f33" stroke-width="1.7"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3" fill="none" stroke="#2c2f33" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+      </div>
+      <div class="hi"></div>
+    </div></div>
+  </div>
+  <div class="banner" id="banner"><div class="num" id="num">1</div><div class="bt"><b id="capT"></b><span id="capS"></span><div class="pg" id="pg"><i></i><i></i><i></i><i></i></div></div></div>
+  <div class="tap" id="tap"></div>
 </div>
-<div class="cap"><b id="capT"></b><span id="capS"></span></div>
-<div class="steps" id="steps"><i></i><i></i><i></i><i></i></div>
 
 <script>
-const chat=document.getElementById('chat'),$=id=>document.getElementById(id);
+const $=id=>document.getElementById(id),stage=$('stage'),chat=$('chat'),tapEl=$('tap'),banner=$('banner');
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const photos='<div class="album"><div>🚲</div><div>🚲</div><div>🚲</div><div>🚲</div></div>';
 const AD='Продам велосипед, состояние хорошее. 12 000 ₽. Пишите в личные сообщения.';
 const INFO='ℹ️ Тип публикации: Повторяющаяся<br>📅 Срок: 1 неделя (7 дней)<br>🔄 Интервал: Каждые 24 часа';
+let clock=12*60;
+const tm=()=>{const m=clock++;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
 
-function msg(html,cls){const d=document.createElement('div');d.className='m '+(cls||'');d.innerHTML=html;chat.appendChild(d);
-  d.style.maxHeight='700px';requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('in')));return d}
-async function bot(html,cls,wait=650){const t=msg('<div class="dots"><i></i><i></i><i></i></div>');await sleep(wait);t.remove();return msg(html,cls)}
+function msg(html,o={}){
+  const w=document.createElement('div');w.className='mw'+(o.me?' me':'')+(o.wide?' wide':'');
+  w.innerHTML='<div class="b">'+html+(o.notime?'':'<i class="tm">'+(o.time||tm())+'</i>')+'</div>'+(o.kb?'<div class="kb'+(o.row?' row':'')+'">'+o.kb+'</div>':'');
+  w.style.maxHeight='900px';chat.appendChild(w);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.add('in')));return w}
+async function bot(html,o={},wait=650){const t=msg('<div class="dots"><i></i><i></i><i></i></div>',{notime:1});await sleep(wait);t.remove();return msg(html,o)}
 function sep(t){const d=document.createElement('div');d.className='sep';d.textContent=t;chat.appendChild(d);requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('in')));return d}
-function press(el,i){const s=el.querySelectorAll('.btns span')[i];s&&s.classList.add('p')}
-function head(t,s,a){$('title').textContent=t;$('sub').textContent=s;$('ava').textContent=a;chat.innerHTML=''}
-function cap(n,t,s){$('capT').textContent=t;$('capS').textContent=s;document.querySelectorAll('#steps i').forEach((e,i)=>e.classList.toggle('on',i<=n))}
+function tap(el){const s=stage.getBoundingClientRect(),r=el.getBoundingClientRect();
+  tapEl.style.left=(r.left+r.width/2-s.left)+'px';tapEl.style.top=(r.top+r.height/2-s.top)+'px';
+  tapEl.classList.remove('go');void tapEl.offsetWidth;tapEl.classList.add('go')}
+function press(w,i){const b=w.querySelectorAll('.kb span')[i];if(!b)return;tap(b);setTimeout(()=>b.classList.add('p'),260)}
+async function head(t,s,a){chat.classList.add('sw');await sleep(260);chat.innerHTML='';
+  $('title').textContent=t;$('sub').textContent=s;$('ava').textContent=a;chat.classList.remove('sw');await sleep(160)}
+let hideT;
+function cap(n,t,s){$('num').textContent=n+1;$('capT').textContent=t;$('capS').textContent=s;
+  document.querySelectorAll('#pg i').forEach((e,i)=>e.classList.toggle('on',i<=n));
+  banner.classList.add('show');clearTimeout(hideT);hideT=setTimeout(()=>banner.classList.remove('show'),3600)}
 
 async function run(){
 for(;;){
+  clock=12*60;
   /* 1. Пользователь создаёт объявление */
-  head('Бот объявлений','@Reklama_chaty_bot','🤖');cap(0,'Шаг 1 · Пользователь создаёт объявление','Бот сам задаёт вопросы по порядку, фото — до 10 штук одним альбомом');
-  await sleep(500);
-  let m=await bot('<b>Выберите тариф размещения объявления:</b><br>• Публикация каждые 24 часа (7 дней)<br>• Публикация каждые 24 часа (30 дней)<div class="btns"><span>📆 7 дней (ежедневно) — 1 200 ₽</span><span>📆 30 дней (ежедневно) — 3 100 ₽</span><span>⬅️ Назад</span></div>','wide');
-  await sleep(1300);press(m,0);await sleep(700);
-  m=await bot('<b>Добавление объявления</b><br><b>Регион:</b> Барахолка<br><br>💬 Чаты:<br>Барахолка Центр<br>Барахолка Север<br><br><i>Прикрепите фото/видео (от 0 до 10) или пропустите шаг, нажав на кнопку Далее ➡️</i><div class="btns row"><span>Далее ➡️</span><span>⬅️ Назад</span></div>','wide');
-  await sleep(1200);msg(photos+'<div class="tag">4 фото</div>','me');await sleep(900);press(m,0);await sleep(700);
+  await head('Бот объявлений','@Reklama_chaty_bot','🤖');
+  cap(0,'Пользователь создаёт объявление','Бот сам задаёт вопросы по порядку, фото до 10 штук одним альбомом');
+  await sleep(900);
+  let m=await bot('<b>Выберите тариф размещения объявления:</b><br>• Публикация каждые 24 часа (7 дней)<br>• Публикация каждые 24 часа (30 дней)',{wide:1,kb:'<span>📆 7 дней (ежедневно) — 1 200 ₽</span><span>📆 30 дней (ежедневно) — 3 100 ₽</span><span>⬅️ Назад</span>'});
+  await sleep(1500);press(m,0);await sleep(900);
+  m=await bot('<b>Добавление объявления</b><br><b>Регион:</b> Барахолка<br><br>💬 Чаты:<br>Барахолка Центр<br>Барахолка Север<br><br><i class="t">Прикрепите фото/видео (от 0 до 10) или пропустите шаг, нажав на кнопку Далее ➡️</i>',{wide:1,row:1,kb:'<span>Далее ➡️</span><span>⬅️ Назад</span>'});
+  await sleep(1300);msg(photos+'<div class="tag">4 фото</div>',{me:1});await sleep(1000);press(m,0);await sleep(800);
   await bot('✏️ Отправьте текст объявления');await sleep(900);
-  msg(AD,'me');await sleep(1000);
-  await bot('⏳ <b>Ваше объявление отправлено на модерацию</b><br>'+INFO,'wide');await sleep(2200);
+  msg(AD,{me:1});await sleep(1000);
+  await bot('⏳ <b>Ваше объявление отправлено на модерацию</b><br>'+INFO,{wide:1});await sleep(2200);
 
   /* 2. Модерация */
-  head('Админский чат','закрытый','🛡');cap(1,'Шаг 2 · Вы проверяете в закрытом админском чате','Каждая заявка приходит с двумя кнопками: «Принять» или «Отклонить»');
-  await sleep(400);
-  const a=msg('Пользователь @ivan_example Иван хочет опубликовать объявление:<br><br><b>Регион:</b> Барахолка<br>'+AD+'<br><br>🆔 757<br>'+INFO+'<br>💰 <b>Стоимость:</b> 1 200 ₽<div class="btns row"><span class="ok">✅ Принять</span><span class="no">⛔ Отклонить</span></div>','wide');
-  await sleep(2200);press(a,0);a.querySelector('.ok').classList.add('p');await sleep(1600);
+  await head('Админский чат','закрытый','🛡');
+  cap(1,'Вы проверяете в закрытом админском чате','Каждая заявка приходит с двумя кнопками: «Принять» или «Отклонить»');
+  await sleep(900);
+  const a=msg('Пользователь @ivan_example Иван хочет опубликовать объявление:<br><br><b>Регион:</b> Барахолка<br>'+AD+'<br><br>🆔 757<br>'+INFO+'<br>💰 <b>Стоимость:</b> 1 200 ₽',{wide:1,row:1,kb:'<span>✅ Принять</span><span>⛔ Отклонить</span>'});
+  await sleep(2400);press(a,0);await sleep(1600);
 
   /* 3. Оплата */
-  head('Бот объявлений','@Reklama_chaty_bot','🤖');cap(2,'Шаг 3 · Пользователь оплачивает размещение','Вручную: скриншот чека — или автоматически через платёжный сервис');
-  await sleep(400);
-  m=await bot('✅ <b>Ваше объявление одобрено!</b><br><br>🆔 ID объявления: 757<br>📍 Будет размещено в: Барахолка<br><br>💳 <b>Выберите способ оплаты:</b><div class="btns"><span>💰 1plat.money</span><span>🎯 AAIO.so</span></div>','wide');
-  await sleep(1800);msg('<div class="shot"><b>✓ Перевод выполнен</b><br>1 200 ₽</div>','me');await sleep(1000);
-  await bot('✅ <b>Чек получен!</b><br>Ваш чек передан администратору для проверки. Ожидайте подтверждения оплаты.','wide');await sleep(1800);
-  head('Админский чат','закрытый','🛡');await sleep(300);
-  m=msg('💳 <b>ЧЕК ДЛЯ РУЧНОЙ ОПЛАТЫ</b><br><br>👤 <b>Пользователь:</b> @ivan_example Иван<br>🆔 <b>ID объявления:</b> 757<br>💳 <b>Сумма:</b> 1 200 ₽<br><br>📸 <b>Чек получен!</b> Проверьте перевод и подтвердите оплату.<div class="btns row"><span class="ok">✅ Подтвердить оплату</span><span class="no">❌ Отклонить</span></div>','wide');
-  await sleep(2200);m.querySelector('.ok').classList.add('p');await sleep(1600);
+  await head('Бот объявлений','@Reklama_chaty_bot','🤖');
+  cap(2,'Пользователь оплачивает размещение','Вручную: скриншот чека, или автоматически через платёжный сервис');
+  await sleep(900);
+  m=await bot('✅ <b>Ваше объявление одобрено!</b><br><br>🆔 ID объявления: 757<br>📍 Будет размещено в: Барахолка<br><br>💳 <b>Выберите способ оплаты:</b>',{wide:1,kb:'<span>💰 1plat.money</span><span>🎯 AAIO.so</span>'});
+  await sleep(1800);msg('<div class="shot"><b>✓ Перевод выполнен</b><br>1 200 ₽</div>',{me:1});await sleep(1000);
+  await bot('✅ <b>Чек получен!</b><br>Ваш чек передан администратору для проверки. Ожидайте подтверждения оплаты.',{wide:1});await sleep(1800);
+  await head('Админский чат','закрытый','🛡');
+  m=msg('💳 <b>ЧЕК ДЛЯ РУЧНОЙ ОПЛАТЫ</b><br><br>👤 <b>Пользователь:</b> @ivan_example Иван<br>🆔 <b>ID объявления:</b> 757<br>💳 <b>Сумма:</b> 1 200 ₽<br><br>📸 <b>Чек получен!</b> Проверьте перевод и подтвердите оплату.',{wide:1,row:1,kb:'<span>✅ Подтвердить оплату</span><span>❌ Отклонить</span>'});
+  await sleep(2400);press(m,0);await sleep(1600);
 
   /* 4. Публикация */
-  head('Барахолка Центр','чат объявлений','🛒');cap(3,'Шаг 4 · Бот публикует каждые 24 часа','Предыдущая публикация удаляется, новая выходит в выбранное время');
-  await sleep(400);
+  await head('Барахолка Центр','чат объявлений','🛒');
+  cap(3,'Бот публикует каждые 24 часа','Предыдущая публикация удаляется, новая выходит в выбранное время');
+  await sleep(900);
   let prev=null;
   for(let d=1;d<=3;d++){
     if(prev){const s=sep('через 24 часа');await sleep(900);prev.classList.add('deleted');await sleep(900);s.remove()}
-    prev=msg(photos+AD+'<div class="tag">День '+d+' · 12:00</div>','wide');
-    await sleep(2200);
+    prev=msg(photos+AD+'<div class="tag">День '+d+'</div>',{wide:1,time:'12:00'});
+    await sleep(2300);
   }
   await sleep(1500);
 }}
