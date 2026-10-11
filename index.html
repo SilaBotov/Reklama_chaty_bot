@@ -177,17 +177,23 @@ section.hero{padding-top:28px}
 @media (max-width:900px){.site-header__inner{flex-wrap:wrap}.site-nav{order:3;width:100%;justify-content:flex-start;gap:12px}.site-socials{margin-left:auto}.site-footer__inner{grid-template-columns:minmax(0,1fr)}.site-footer__links{justify-content:flex-start}}
 @media (max-width:480px){.site-nav{gap:8px}.site-nav a{font-size:.88rem}.brand small{display:none}}
 .demo{margin:0 auto;max-width:420px;min-height:760px}
-@media (max-width:640px){.site-nav a.button--ghost,.site-nav a[href$="/guide/"]{display:none}}
+@media (max-width:640px){.site-nav a.button--ghost{display:none}}
 
 @media (max-width:480px){.w,.site-header .container,.site-footer .container{width:min(1180px,calc(100% - 20px))}}
-.js [data-reveal]{opacity:0;transform:translateY(40px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
-.js [data-reveal].is-visible{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.js [data-reveal]{opacity:1;transform:none;transition:none}}
+
+/* Значки соцсетей в шапке: одинаковый размер и цвета */
+.site-socials a{flex:0 0 38px;box-sizing:border-box;padding:0}
+.site-socials a svg{display:block;width:22px;height:22px}
+.site-socials a[aria-label="Telegram"]{background:linear-gradient(180deg,#34B4EC,#1C86C8);border-color:rgba(255,255,255,.3);color:#fff}
+.site-socials a[aria-label="Telegram"]:hover{background:linear-gradient(180deg,#4CC1F5,#2796DA);border-color:rgba(255,255,255,.55);color:#fff}
+.site-socials a[aria-label="ВКонтакте"]{background:rgba(75,202,221,.12);border-color:rgba(75,202,221,.35);color:var(--primary)}
+.site-socials a[aria-label="ВКонтакте"]:hover{background:rgba(75,202,221,.22);border-color:var(--primary);color:var(--primary)}
+/* Значок Telegram в карточке «Портфолио в Telegram» того же цвета, что кнопка в шапке */
+.accordion__icon--tg{background:linear-gradient(180deg,#34B4EC,#1C86C8);color:#fff}
 </style>
 <link rel="icon" type="image/png" href="https://silabotov.ru/assets/img/logo-silabotov.png">
 <link rel="apple-touch-icon" href="https://silabotov.ru/assets/img/logo-silabotov.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "Реклама Бот: автопубликация объявлений", "applicationCategory": "BusinessApplication", "operatingSystem": "Telegram", "description": "Бот сам публикует объявления в чатах-барахолках и каналах каждые 24 часа: модерация, оплата по чеку или онлайн, свои тарифы для каждого региона.", "url": "https://silabotov.ru/Reklama_chaty_bot/", "image": "https://silabotov.ru/og-image.png", "inLanguage": "ru", "author": {"@type": "Organization", "name": "Сила Ботов", "url": "https://silabotov.ru/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Каталог", "item": "https://silabotov.ru/Catalog/"}, {"@type": "ListItem", "position": 2, "name": "Бот для автопубликации объявлений", "item": "https://silabotov.ru/Reklama_chaty_bot/"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Как бот публикует объявления?", "acceptedAnswer": {"@type": "Answer", "text": "Пользователь отправляет объявление один раз, а бот публикует его каждые 24 часа и удаляет предыдущую публикацию."}}, {"@type": "Question", "name": "Можно ли публиковать сразу в несколько чатов?", "acceptedAnswer": {"@type": "Answer", "text": "Да. Чаты группируются в регионы, и объявление выходит во все чаты выбранного региона. Для каждого региона можно задать свои тарифы."}}, {"@type": "Question", "name": "Кто назначает цены на размещение?", "acceptedAnswer": {"@type": "Answer", "text": "Тарифы и цены назначает владелец бота, отдельно для каждого региона. Например, 7 дней стоят 1 200 ₽, а 30 дней 3 100 ₽."}}, {"@type": "Question", "name": "Как проходит оплата?", "acceptedAnswer": {"@type": "Answer", "text": "Вручную: пользователь отправляет скриншот чека, администратор проверяет перевод и подтверждает оплату. Автоматическая оплата подключается через платёжный сервис, ключи от которого вы предоставите. Большинство платёжных сервисов работает только с юрлицами."}}, {"@type": "Question", "name": "Можно ли проверять объявления до публикации?", "acceptedAnswer": {"@type": "Answer", "text": "Да. Каждая заявка сначала попадает в закрытый админский чат, где её можно принять или отклонить. После отклонения доступна кнопка «Написать пользователю»."}}, {"@type": "Question", "name": "Сколько фотографий можно прикрепить?", "acceptedAnswer": {"@type": "Answer", "text": "До 10 фотографий. Они публикуются одним альбомом."}}, {"@type": "Question", "name": "Для каких площадок подходит бот?", "acceptedAnswer": {"@type": "Answer", "text": "Для чатов-барахолок и каналов с объявлениями."}}, {"@type": "Question", "name": "Как заказать такого бота?", "acceptedAnswer": {"@type": "Answer", "text": "Напишите разработчику в Макс или Telegram: кнопки есть внизу страницы."}}]}]}</script>
-<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="ag" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7B5CFF"/><stop offset=".55" stop-color="#33E1FF"/><stop offset="1" stop-color="#FFC94A"/></linearGradient></defs></svg>
@@ -401,35 +407,5 @@ for(;;){
 
 var started=false;function go(){if(!started){started=true;run()}}if("IntersectionObserver" in window){new IntersectionObserver(function(e,o){if(e[0].isIntersecting){o.disconnect();go()}},{threshold:.2}).observe(H)}else{go()}
 })();</script>
-<script>
-(function(){
-  function tag(el,d){el.setAttribute('data-reveal','');if(d)el.setAttribute('data-reveal-delay',String(d))}
-  var groups=['ft','shots','steps','pl'];
-  document.querySelectorAll('section').forEach(function(sec){
-    var w=sec.querySelector(':scope > .w');if(!w)return;
-    Array.prototype.forEach.call(w.children,function(ch){
-      var grp=groups.some(function(g){return ch.classList.contains(g)});
-      if(grp){Array.prototype.forEach.call(ch.children,function(c,i){tag(c,Math.min(i*100,400))})}
-      else tag(ch,0);
-    });
-  });
-  var els=document.querySelectorAll('[data-reveal]');
-  if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting||e.boundingClientRect.top<0){
-          var d=parseInt(e.target.getAttribute('data-reveal-delay')||'0',10);
-          setTimeout(function(){e.target.classList.add('is-visible')},d);
-          io.unobserve(e.target);
-        }
-      });
-    },{rootMargin:'0px 0px -60px 0px',threshold:0.05});
-    els.forEach(function(el){io.observe(el)});
-    var tk=false;
-    function sweep(){tk=false;els.forEach(function(el){if(!el.classList.contains('is-visible')&&el.getBoundingClientRect().top<-20){el.classList.add('is-visible');io.unobserve(el)}})}
-    addEventListener('scroll',function(){if(!tk){tk=true;requestAnimationFrame(sweep)}},{passive:true});
-  }else{els.forEach(function(el){el.classList.add('is-visible')})}
-})();
-</script>
 </body>
 </html>
